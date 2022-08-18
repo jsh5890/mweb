@@ -24,6 +24,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PostControllerTest {
 
     @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
     private MockMvc mockMvc;
 
     @Autowired
@@ -44,7 +47,6 @@ class PostControllerTest {
                 .content("내용입니다.")
                 .build();
 
-        ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(request);
 
         System.out.println("json : " + json);
@@ -55,17 +57,26 @@ class PostControllerTest {
                     .content(json)
                 )
                 .andExpect(status().isOk())
-                .andExpect(content().string("{}"))
+                .andExpect(content().string(""))
                 .andDo(print());
     }
 
     @Test
     @DisplayName("/posts 요청시 title 값은 필수다.")
     void test2() throws Exception {
+
+        PostCreate request = PostCreate.builder()
+                .title(null)
+                .content("내용입니다.")
+                .build();
+
+        String json = objectMapper.writeValueAsString(request);
+
         //  application/json, application/x-www-form-urlencoded
         mockMvc.perform(post("/posts")
                 .contentType(APPLICATION_JSON)
-                .content("{\"title\": null, \"content\": \"내용입니다.\"}")
+                        .content(json)
+//                .content("{\"title\": null, \"content\": \"내용입니다.\"}")
                 )
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("400"))
@@ -78,10 +89,18 @@ class PostControllerTest {
     @DisplayName("/posts 요청시 db값이 저장이된다.")
     void test3() throws Exception {
         //before ==> beforeEach 메서드 실행
+
+        PostCreate request = PostCreate.builder()
+                .title("제목입니다.")
+                .content("내용입니다.")
+                .build();
+
+        String json = objectMapper.writeValueAsString(request);
         //when
         mockMvc.perform(post("/posts")
                         .contentType(APPLICATION_JSON)
-                        .content("{\"title\": \"제목입니다.\", \"content\": \"내용입니다.\"}")
+                        .content(json)
+//                        .content("{\"title\": \"제목입니다.\", \"content\": \"내용입니다.\"}")
                 )
                 .andExpect(status().isOk())
                 .andDo(print());
