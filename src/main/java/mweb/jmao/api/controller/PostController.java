@@ -3,9 +3,9 @@ package mweb.jmao.api.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mweb.jmao.api.request.PostCreate;
+import mweb.jmao.api.request.PostSearch;
 import mweb.jmao.api.response.PostResponse;
 import mweb.jmao.api.service.PostService;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -35,8 +35,8 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public List<PostResponse> getList(Pageable pageable) {
+    public List<PostResponse> getList(@ModelAttribute PostSearch postSearch) {
 
-        return postService.getList(pageable);
+        return postService.getList(postSearch);
     }
 }

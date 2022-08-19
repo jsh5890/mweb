@@ -3,15 +3,13 @@ package mweb.jmao.api.service;
 import mweb.jmao.api.domain.Post;
 import mweb.jmao.api.repository.PostRepository;
 import mweb.jmao.api.request.PostCreate;
+import mweb.jmao.api.request.PostSearch;
 import mweb.jmao.api.response.PostResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -92,13 +90,18 @@ class PostServiceTest {
         postRepository.saveAll(postList);
 
         //sql -> select, limit, ofset
-        Pageable pageable = PageRequest.of(0,5, Direction.DESC,"id");
+        PostSearch postSearch = PostSearch.builder()
+                .page(1)
+                .size(10)
+                .build();
+
+//        Pageable pageable = PageRequest.of(0,5, Direction.DESC,"id");
 
         // when
-        List<PostResponse> posts = postService.getList(pageable);
+        List<PostResponse> posts = postService.getList(postSearch);
 
         // then
-        assertEquals(5L, posts.size());
+        assertEquals(10L, posts.size());
         assertEquals("jmao 제목 : 30", posts.get(0).getTitle());
         assertEquals("jmao 제목 : 26", posts.get(4).getTitle());
     }

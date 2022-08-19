@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import mweb.jmao.api.domain.Post;
 import mweb.jmao.api.repository.PostRepository;
 import mweb.jmao.api.request.PostCreate;
+import mweb.jmao.api.request.PostSearch;
 import mweb.jmao.api.response.PostResponse;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,10 +40,10 @@ public class PostService {
                 .build();
     }
 
-    public List<PostResponse> getList(Pageable pageable) {
+    public List<PostResponse> getList(PostSearch postSearch) {
 //        Pageable pageable = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC,"id"));
 
-        return postRepository.findAll(pageable).stream()
+        return postRepository.getList(postSearch).stream()
                 .map(post -> new PostResponse(post))
                 .collect(Collectors.toList());
     }
