@@ -3,6 +3,7 @@ package mweb.jmao.api.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mweb.jmao.api.domain.Post;
+import mweb.jmao.api.domain.PostEditor;
 import mweb.jmao.api.repository.PostRepository;
 import mweb.jmao.api.request.PostCreate;
 import mweb.jmao.api.request.PostEdit;
@@ -56,5 +57,13 @@ public class PostService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
 
         post.change(postEdit.getTitle(), postEdit.getContent());
+
+        PostEditor.PostEditorBuilder postEditorBuilder = post.toEditor();
+
+        PostEditor postEditor = postEditorBuilder.title(postEdit.getTitle())
+                .content(postEdit.getContent())
+                .build();
+
+        post.edit(postEditor);
     }
 }
