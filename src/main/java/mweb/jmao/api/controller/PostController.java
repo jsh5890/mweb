@@ -8,6 +8,7 @@ import mweb.jmao.api.service.PostService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -29,8 +30,11 @@ public class PostController {
 
     @GetMapping("/posts/{postId}")
     public PostResponse get(@PathVariable Long postId) {
-        PostResponse response = postService.get(postId);
+        return postService.get(postId);
+    }
 
-        return response;
+    @GetMapping("/posts")
+    public List<PostResponse> getList() {
+        return postService.getList();
     }
 }

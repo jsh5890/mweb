@@ -8,6 +8,9 @@ import mweb.jmao.api.request.PostCreate;
 import mweb.jmao.api.response.PostResponse;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -29,12 +32,16 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
 
-        PostResponse postResponse = PostResponse.builder()
+        return PostResponse.builder()
                 .id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .build();
+    }
 
-        return postResponse;
+    public List<PostResponse> getList() {
+        return postRepository.findAll().stream()
+                .map(post -> new PostResponse(post))
+                .collect(Collectors.toList());
     }
 }

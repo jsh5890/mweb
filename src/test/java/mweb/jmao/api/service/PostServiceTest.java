@@ -10,12 +10,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 class PostServiceTest {
-
+    //변수명 일괄변경 shift + F6
+    
     @Autowired
     private PostService postService;
 
@@ -48,7 +51,7 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("글 한개조회")
+    @DisplayName("글 한개 조회")
     void test2(){
         // given
         Post requestPost = Post.builder()
@@ -68,5 +71,31 @@ class PostServiceTest {
 
         assertEquals("foo",response.getTitle());
         assertEquals("bar",response.getContent());
+    }
+
+    @Test
+    @DisplayName("글 여러개 조회")
+    void test3(){
+        // given
+        postRepository.saveAll(List.of(
+                Post.builder()
+                        .title("foo1")
+                        .content("bar1")
+                        .build(),
+                Post.builder()
+                        .title("foo2")
+                        .content("bar2")
+                        .build()
+        ));
+
+//        Long postId = 1L;
+
+        // when
+        List<PostResponse> posts = postService.getList();
+
+        // then
+
+
+        assertEquals(2L,posts.size());
     }
 }
