@@ -2,11 +2,10 @@ package mweb.jmao.api.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mweb.jmao.api.domain.Post;
 import mweb.jmao.api.request.PostCreate;
 import mweb.jmao.api.service.PostService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -21,5 +20,17 @@ public class PostController {
     public void post(@RequestBody @Valid PostCreate request) throws Exception {
         postService.write(request);
 //        return Map.of("postId", postId);
+    }
+
+    /**
+     * /posts -> 글 전체 조회 (검색 페이징)
+     * /posts/{postId} -> 글한개 조회
+     */
+
+    @GetMapping("/posts/{postId}")
+    public Post get(@PathVariable Long postId) {
+        Post post = postService.get(postId);
+
+        return post;
     }
 }
