@@ -5,9 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import mweb.jmao.api.domain.Post;
 import mweb.jmao.api.repository.PostRepository;
 import mweb.jmao.api.request.PostCreate;
+import mweb.jmao.api.request.PostEdit;
 import mweb.jmao.api.request.PostSearch;
 import mweb.jmao.api.response.PostResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,5 +48,13 @@ public class PostService {
         return postRepository.getList(postSearch).stream()
                 .map(post -> new PostResponse(post))
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void edit(Long postId, PostEdit postEdit) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+
+        post.change(postEdit.getTitle(), postEdit.getContent());
     }
 }

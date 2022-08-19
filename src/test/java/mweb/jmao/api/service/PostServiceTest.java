@@ -3,8 +3,10 @@ package mweb.jmao.api.service;
 import mweb.jmao.api.domain.Post;
 import mweb.jmao.api.repository.PostRepository;
 import mweb.jmao.api.request.PostCreate;
+import mweb.jmao.api.request.PostEdit;
 import mweb.jmao.api.request.PostSearch;
 import mweb.jmao.api.response.PostResponse;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -104,5 +106,28 @@ class PostServiceTest {
         assertEquals(10L, posts.size());
         assertEquals("jmao 제목 : 30", posts.get(0).getTitle());
         assertEquals("jmao 제목 : 26", posts.get(4).getTitle());
+    }
+    @Test
+    @DisplayName("글 제목 수정")
+    void test4(){
+        // given
+        Post post = Post.builder()
+                .title("쏘갈")
+                .content("아파트")
+                .build();
+
+        postRepository.save(post);
+
+        // when
+        PostEdit postEdit = PostEdit.builder()
+                .title("쏘오갈")
+                .build();
+
+        postService.edit(post.getId(), postEdit);
+
+        // then
+        Post changedPost = postRepository.findById(post.getId())
+                .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id : " + post.getId()));
+        Assertions.assertEquals("쏘오갈", changedPost.getTitle());
     }
 }
