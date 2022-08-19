@@ -3,6 +3,7 @@ package mweb.jmao.api.service;
 import mweb.jmao.api.domain.Post;
 import mweb.jmao.api.repository.PostRepository;
 import mweb.jmao.api.request.PostCreate;
+import mweb.jmao.api.response.PostResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -60,12 +61,12 @@ class PostServiceTest {
 //        Long postId = 1L;
 
         // when
-        Post post = postService.get(requestPost.getId());
+        PostResponse response = postService.get(requestPost.getId());
 
         // then
-        assertNotNull(post);
+        assertNotNull(response);
 
-        assertEquals("foo",post.getTitle());
-        assertEquals("bar",post.getContent());
+        assertEquals("foo",response.getTitle());
+        assertEquals("bar",response.getContent());
     }
 }

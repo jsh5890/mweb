@@ -2,8 +2,8 @@ package mweb.jmao.api.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mweb.jmao.api.domain.Post;
 import mweb.jmao.api.request.PostCreate;
+import mweb.jmao.api.response.PostResponse;
 import mweb.jmao.api.service.PostService;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,9 +28,9 @@ public class PostController {
      */
 
     @GetMapping("/posts/{postId}")
-    public Post get(@PathVariable Long postId) {
-        Post post = postService.get(postId);
+    public PostResponse get(@PathVariable Long postId) {
+        PostResponse response = postService.get(postId);
 
-        return post;
+        return response;
     }
 }
