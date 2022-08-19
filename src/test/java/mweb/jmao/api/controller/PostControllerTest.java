@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import mweb.jmao.api.domain.Post;
 import mweb.jmao.api.repository.PostRepository;
 import mweb.jmao.api.request.PostCreate;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.Matchers.is;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -139,26 +143,22 @@ class PostControllerTest {
     @DisplayName("글 여러개 조회")
     void test5() throws Exception {
         // given
-        Post post1 = postRepository.save(Post.builder()
-                .title("1")
-                .content("bar1")
-                .build());
-        Post post2 = postRepository.save(Post.builder()
-                .title("2")
-                .content("bar2")
-                .build());
+        List<Post> postList = IntStream.range(1, 31)
+                .mapToObj(i -> Post.builder()
+                        .title("jmao 제목 : " + i)
+                        .content("좌이 : " + i)
+                        .build())
+                .collect(Collectors.toList());
+
+        postRepository.saveAll(postList);
 
         // expected
-        mockMvc.perform(get("/posts")
+        mockMvc.perform(get("/posts?page=1&sort=id,desc")
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()", is(2)))
-                .andExpect(jsonPath("$[0].id").value(post1.getId()))
-                .andExpect(jsonPath("$[0].title").value("1"))
-                .andExpect(jsonPath("$[0].content").value("bar1"))
-                .andExpect(jsonPath("$[1].id").value(post2.getId()))
-                .andExpect(jsonPath("$[1].title").value("2"))
-                .andExpect(jsonPath("$[1].content").value("bar2"))
+                .andExpect(jsonPath("$.length()", Matchers.is(5)))
+                .andExpect(jsonPath("$[0].title").value("jmao 제목 : 30"))
+                .andExpect(jsonPath("$[0].content").value("좌이 : 30"))
                 .andDo(print());
 
     }
