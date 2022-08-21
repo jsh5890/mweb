@@ -3,6 +3,7 @@ package mweb.jmao.api.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mweb.jmao.api.request.PostCreate;
+import mweb.jmao.api.request.PostEdit;
 import mweb.jmao.api.request.PostSearch;
 import mweb.jmao.api.response.PostResponse;
 import mweb.jmao.api.service.PostService;
@@ -38,5 +39,10 @@ public class PostController {
     public List<PostResponse> getList(@ModelAttribute PostSearch postSearch) {
 
         return postService.getList(postSearch);
+    }
+
+    @PatchMapping("/posts/{postId}")
+    public void edit(@PathVariable Long postId, @RequestBody @Valid PostEdit postEdit) {
+        postService.edit(postId, postEdit);
     }
 }
