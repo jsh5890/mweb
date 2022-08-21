@@ -1,6 +1,7 @@
 package mweb.jmao.api.service;
 
 import mweb.jmao.api.domain.Post;
+import mweb.jmao.api.exception.PostNotFound;
 import mweb.jmao.api.repository.PostRepository;
 import mweb.jmao.api.request.PostCreate;
 import mweb.jmao.api.request.PostEdit;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -129,8 +131,8 @@ class PostServiceTest {
         // then
         Post changedPost = postRepository.findById(post.getId())
                 .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id : " + post.getId()));
-        Assertions.assertEquals("쏘오갈", changedPost.getTitle());
-        Assertions.assertEquals("아파트", changedPost.getContent());
+        assertEquals("쏘오갈", changedPost.getTitle());
+        assertEquals("아파트", changedPost.getContent());
     }
 
     @Test
@@ -155,8 +157,8 @@ class PostServiceTest {
         // then
         Post changedPost = postRepository.findById(post.getId())
                 .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id : " + post.getId()));
-        Assertions.assertEquals("쏘갈", changedPost.getTitle());
-        Assertions.assertEquals("초가집", changedPost.getContent());
+        assertEquals("쏘갈", changedPost.getTitle());
+        assertEquals("초가집", changedPost.getContent());
     }
 
     @Test
@@ -173,6 +175,61 @@ class PostServiceTest {
         postService.delete(post.getId());
 
         // then
-        Assertions.assertEquals(0, postRepository.count());
+        assertEquals(0, postRepository.count());
+    }
+
+    @Test
+    @DisplayName("글 1개 조회 - 존재하지 않는 글")
+    void test7(){
+        // given
+        Post post = Post.builder()
+                .title("쏘갈")
+                .content("아파트")
+                .build();
+        postRepository.save(post);
+
+        // expected
+        assertThrows(PostNotFound.class, () -> {
+            postService.get(post.getId() + 1L);
+        });
+    }
+
+    @Test
+    @DisplayName("글 내용 삭제 - 존재하지 않는 글")
+    void test8(){
+        // given
+        Post post = Post.builder()
+                .title("쏘갈")
+                .content("아파트")
+                .build();
+        postRepository.save(post);
+
+        // expected
+        assertThrows(PostNotFound.class, () -> {
+            postService.delete(post.getId() + 1L);
+        });
+    }
+
+    @Test
+    @DisplayName("글 내용 수정 - 존재 하지 않는 글")
+    void test9(){
+        // given
+        Post post = Post.builder()
+                .title("쏘갈")
+                .content("아파트")
+                .build();
+
+        postRepository.save(post);
+
+        // when
+        PostEdit postEdit = PostEdit.builder()
+                .title("쏘갈")
+                .content("초가집")
+                .build();
+
+        /// expected
+        assertThrows(PostNotFound.class, () -> {
+            postService.edit(post.getId() + 1L, postEdit);
+        });
     }
 }
