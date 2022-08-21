@@ -1,6 +1,7 @@
 package mweb.jmao.api.request;
 
 import lombok.*;
+import mweb.jmao.api.exception.InvalidRequest;
 
 import javax.validation.constraints.NotBlank;
 
@@ -20,7 +21,13 @@ public class PostCreate {
         this.title = title;
         this.content = content;
     }
-    
+
+    public void validate() {
+        if (title.contains("바보")){
+            throw new InvalidRequest("title", "제목에 바보를 포함할 수 없습니다.");
+        }
+    }
+
     //빌더의 장점
     // - 가독성이 좋다, 값 생성 유연함, 필요값만 받을수있음// -> 오버로딩 가능한 조건?
     // - 객체의 불변성

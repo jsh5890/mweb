@@ -1,8 +1,12 @@
 package mweb.jmao.api.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import mweb.jmao.api.exception.InvalidRequest;
+import mweb.jmao.api.exception.MwebException;
+import mweb.jmao.api.exception.PostNotFound;
 import mweb.jmao.api.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -43,4 +47,24 @@ public class ExceptionController {
 //        error.put(fieldName, errorMessage);
 //        return error;
     }
+
+
+    @ResponseBody
+    @ExceptionHandler(MwebException.class)
+    public ResponseEntity<ErrorResponse> mwebException(MwebException e) {
+        int statusCode = e.statusCode();
+
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .code(String.valueOf(statusCode))
+                .message(e.getMessage())
+                .validation(e.getVaildation())
+                .build();
+
+        ResponseEntity<ErrorResponse> response = ResponseEntity.status(statusCode)
+                .body(errorResponse);
+
+        return response;
+    }
+
+
 }

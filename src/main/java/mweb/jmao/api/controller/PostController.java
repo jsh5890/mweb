@@ -2,6 +2,7 @@ package mweb.jmao.api.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mweb.jmao.api.exception.InvalidRequest;
 import mweb.jmao.api.request.PostCreate;
 import mweb.jmao.api.request.PostEdit;
 import mweb.jmao.api.request.PostSearch;
@@ -21,6 +22,8 @@ public class PostController {
 
     @PostMapping("/posts")
     public void post(@RequestBody @Valid PostCreate request) throws Exception {
+
+        request.validate();
         postService.write(request);
 //        return Map.of("postId", postId);
     }
