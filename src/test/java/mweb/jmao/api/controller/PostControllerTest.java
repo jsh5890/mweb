@@ -257,3 +257,14 @@ class PostControllerTest {
 
     }
 }
+
+// api 문서 생성
+
+// get /posts/{postId} -> 단건
+// post /posts ->여러건
+
+// 클라이언트 입장 어떤 api 있는지 몰라
+
+// spring restdocs
+// 운영코드 영향 없음
+// 테스트케이스 실행 문서생성
