@@ -18,12 +18,12 @@ const post = ref({
   content: "",
 });
 
-axios.get(`/api/posts/${props.postId}`).then((response) => {
+axios.get(`/posts/${props.postId}`).then((response) => {
   post.value = response.data;
 });
 
 const edit = () => {
-  axios.patch(`/api/posts/${props.postId}`, post.value).then((response) => {
+  axios.patch(`/posts/${props.postId}`, post.value).then((response) => {
     router.replace({ name: "home" });
   });
 };

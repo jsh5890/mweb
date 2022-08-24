@@ -10,7 +10,7 @@ const router = useRouter();
 
 const write = function () {
   axios
-    .post("/api/posts", {
+    .post("/posts", {
       title: title.value,
       content: content.value,
     })

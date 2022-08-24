@@ -21,7 +21,7 @@ const moveToEdit = () => {
 };
 
 onMounted(() => {
-  axios.get(`/api/posts/${props.postId}`).then((response) => {
+  axios.get(`/posts/${props.postId}`).then((response) => {
     post.value = response.data;
   });
 });
