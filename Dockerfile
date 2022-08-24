@@ -1,11 +1,11 @@
-FROM node:current-alpine
-ENV NODE_OPTIONS --openssl-legacy-provider
+FROM node:16.17.0
+#ENV NODE_OPTIONS --openssl-legacy-provider
 RUN mkdir /mweb
 COPY . /mweb
 WORKDIR /mweb/front
 #RUN apt install -y yarn
-RUN yarn && yarn build --spa
-#RUN npm install && npm run build -- --spa
+#RUN yarn && yarn build --spa
+RUN npm install && npm run build
 RUN mkdir -p ../src/main/resources/static
 RUN cp -R dist/* ../src/main/resources/static
 
